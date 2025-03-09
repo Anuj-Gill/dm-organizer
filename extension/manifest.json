@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "LinkedIn DM Fetcher",
+  "version": "1.0",
+  "description": "Fetch LinkedIn DMs and organize them",
+  "permissions": ["scripting", "activeTab", "storage"],
+  "host_permissions": ["https://www.linkedin.com/messaging/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/messaging/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
