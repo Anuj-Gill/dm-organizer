@@ -12,7 +12,8 @@ const elements = {
     error: document.getElementById("error"),
     messageContainer: document.getElementById("messageContainer"),
     filterContainer: document.getElementById("filterOptions"),
-    filteredMessages: document.getElementById("filteredMessages")
+    filteredMessages: document.getElementById("filteredMessages"),
+    priorityInupt: document.getElementById("priorityInput"),
   };
   
   // API configuration
@@ -249,7 +250,7 @@ function detectLinkedInProfile(elements) {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ messages: formattedMessages }),
+        body: JSON.stringify({ messages: formattedMessages, username: elements.linkedinUsernameInput.value, priority: elements.priorityInupt.value }),
         // Set timeout to prevent hanging
         signal: AbortSignal.timeout(10000)
       })
@@ -325,15 +326,45 @@ const counts = {};
 function displayFilterOptions(tagCounts, elements) {
 // ... (Your existing displayFilterOptions code) ...
 elements.filterContainer.innerHTML = "";
-    
     const filters = [
-      { id: 'high-priority', name: 'High Priority', icon: '🔴', count: tagCounts['High Priority'] || 0 },
-      { id: 'spam', name: 'Spam', icon: '🚫', count: tagCounts['Spam'] || 0 },
-      { id: 'networking', name: 'Networking', icon: '🔗', count: tagCounts['Networking'] || 0 },
-      { id: 'sales', name: 'Sales & Outreach', icon: '💼', count: tagCounts['Sales & Outreach'] || 0 },
-      { id: 'needs-response', name: 'Needs Response', icon: '✉️', count: tagCounts['Needs Response'] || 0 },
-      { id: 'all', name: 'All Messages', icon: '📋', count: processedMessages.length }
-    ];
+  { 
+    id: 'priority', 
+    name: 'Priority', 
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#ffffff" stroke="#ffffff" stroke-width="2"><circle cx="12" cy="12" r="10" /></svg>', 
+    count: tagCounts['Priority'] || 0 
+  },
+  { 
+    id: 'spam', 
+    name: 'Spam', 
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2"><circle cx="12" cy="12" r="10" /><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" /></svg>', 
+    count: tagCounts['Spam'] || 0 
+  },
+  { 
+    id: 'networking', 
+    name: 'Networking', 
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a66c2" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>', 
+    count: tagCounts['Networking'] || 0 
+  },
+  { 
+    id: 'sales', 
+    name: 'Sales & Outreach', 
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5c6bc0" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>', 
+    count: tagCounts['Sales & Outreach'] || 0 
+  },
+  { 
+    id: 'needs-response', 
+    name: 'Needs Response', 
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#057642" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>', 
+    count: tagCounts['Needs Response'] || 0 
+  },
+  { 
+    id: 'all', 
+    name: 'All Messages', 
+    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>', 
+    count: processedMessages.length 
+  }
+];
+    
     
     filters.forEach(filter => {
       const button = document.createElement('button');
