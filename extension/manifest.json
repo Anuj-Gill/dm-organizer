@@ -3,8 +3,8 @@
   "name": "LinkedIn DM Fetcher",
   "version": "1.0",
   "description": "Fetch LinkedIn DMs and organize them",
-  "permissions": ["scripting", "activeTab", "storage"],
-  "host_permissions": ["https://www.linkedin.com/messaging/*"],
+  "permissions": ["scripting", "activeTab", "storage", "tabs"],
+  "host_permissions": ["https://www.linkedin.com/messaging/*", "http://localhost:3000/*"],
   "background": {
     "service_worker": "background.js"
   },

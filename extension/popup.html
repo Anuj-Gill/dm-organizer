@@ -3,43 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkedIn DMs</title>
+    <title>LinkedIn Message Manager</title>
     <style>
+        :root {
+            --linkedin-blue: #0077b5;
+            --linkedin-dark-blue: #00669e;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f3f6f8;
+            --border-color: #e0e0e0;
+            --success-color: #0a66c2;
+            --error-color: #d11124;
+            --tag-high-priority: #d11124;
+            --tag-spam: #666666;
+            --tag-networking: #0077b5;
+            --tag-sales: #5c6bc0;
+            --tag-needs-response: #26a69a;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            width: 350px;
-            padding: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 380px;
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
         }
+
+        .container {
+            padding: 16px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .logo {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            color: var(--linkedin-blue);
+        }
+
+        h1 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+        }
+
         #userInfoSection {
-            margin-bottom: 20px;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
         }
+
         .input-group {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
+
         .input-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 14px;
         }
+
         .input-group input {
             width: 100%;
-            padding: 8px;
+            padding: 8px 12px;
             box-sizing: border-box;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s;
         }
+
+        .input-group input:focus {
+            border-color: var(--linkedin-blue);
+            outline: none;
+        }
+
         #userGreeting {
-            font-size: 18px;
-            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
             display: none;
+            color: var(--linkedin-blue);
         }
+
+        button {
+            background-color: var(--linkedin-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--linkedin-dark-blue);
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        #fetchButton {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 15px;
+        }
+
         #loader {
             display: none;
-            margin: 15px 0;
+            margin: 24px 0;
+            text-align: center;
         }
+
         .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
+            border: 3px solid rgba(0, 119, 181, 0.1);
+            border-top: 3px solid var(--linkedin-blue);
             border-radius: 50%;
             width: 24px;
             height: 24px;
@@ -48,66 +142,212 @@
             vertical-align: middle;
             margin-right: 10px;
         }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        #error {
-            color: red;
+
+        .notification {
+            padding: 10px;
             margin: 10px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            text-align: center;
             display: none;
         }
-        #messageList {
-            padding-left: 20px;
+
+        #error {
+            background-color: rgba(209, 17, 36, 0.1);
+            color: var(--error-color);
         }
-        #messageList li {
-            margin-bottom: 15px;
+
+        #success {
+            background-color: rgba(10, 102, 194, 0.1);
+            color: var(--success-color);
         }
-        button {
-            background-color: #0077b5;
+
+        #messageContainer {
+            display: none;
+            margin-top: 16px;
+        }
+
+        #filterOptions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .filter-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px;
+            flex: 1;
+            min-width: 70px;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background-color: rgba(0, 119, 181, 0.1);
+            border-color: var(--linkedin-blue);
+        }
+
+        .filter-icon {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .filter-name {
+            font-size: 12px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .filter-count {
+            background-color: var(--linkedin-blue);
             color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        #filteredMessages {
+            max-height: 350px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .message-item {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
             cursor: pointer;
+            transition: box-shadow 0.2s;
         }
-        button:hover {
-            background-color: #00669e;
+
+        .message-item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .message-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .message-tags {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .tag-pill {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+        }
+
+        .tag-pill.high-priority {
+            background-color: var(--tag-high-priority);
+        }
+
+        .tag-pill.spam {
+            background-color: var(--tag-spam);
+        }
+
+        .tag-pill.networking {
+            background-color: var(--tag-networking);
+        }
+
+        .tag-pill.sales-&-outreach {
+            background-color: var(--tag-sales);
+        }
+
+        .tag-pill.needs-response {
+            background-color: var(--tag-needs-response);
+        }
+
+        .message-preview {
+            font-size: 13px;
+            color: var(--text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .version {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 16px;
         }
     </style>
 </head>
 <body>
-    <h2>LinkedIn Messages</h2>
-    
-    <div id="userInfoSection">
-        <div class="input-group">
-            <label for="linkedinUsername">LinkedIn Username:</label>
-            <input type="text" id="linkedinUsername" placeholder="Enter your LinkedIn username">
+    <div class="container">
+        <div class="header">
+            <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"></path>
+            </svg>
+            <h1>LinkedIn Message Manager</h1>
         </div>
-        <div class="input-group">
-            <label for="userName">Your Name:</label>
-            <input type="text" id="userName" placeholder="Enter your name">
+        
+        <div id="userInfoSection">
+            <div class="input-group">
+                <label for="linkedinUsername">LinkedIn Username:</label>
+                <input type="text" id="linkedinUsername" placeholder="Enter your LinkedIn username">
+            </div>
+            <div class="input-group">
+                <label for="userName">Your Name:</label>
+                <input type="text" id="userName" placeholder="Enter your name">
+            </div>
+            <button id="saveUserInfo">Save User Info</button>
         </div>
-        <button id="saveUserInfo">Save User Info</button>
+        
+        <div id="userGreeting"></div>
+        
+        <button id="fetchMessages" disabled>Process Your LinkedIn Messages</button>
+        
+        <div id="loader">
+            <div class="spinner"></div>
+            <span>Processing your messages...</span>
+        </div>
+        
+        <div id="error" class="notification"></div>
+        <div id="success" class="notification"></div>
+        
+        <div id="messageContainer">
+            <h2>Message Categories</h2>
+            <div id="filterOptions"></div>
+            <div id="filteredMessages"></div>
+        </div>
+        
+        <div class="version">v1.0.0</div>
     </div>
     
-    <div id="userGreeting"></div>
-    
-    <button id="fetchMessages" disabled>Fetch Messages</button>
-    
-    <div id="loader">
-        <div class="spinner"></div>
-        <span>Fetching messages...</span>
-    </div>
-    
-    <div id="error"></div>
-    
-    <ul id="messageList"></ul>
-    
-    <script src="popup.js"></script>
+    <script type="module" src="popup.js"></script>
 </body>
-</html>
+</html> 
