@@ -11,14 +11,15 @@ const redis = new Redis({
 export async function checkCache(req: Request, res: Response, next: NextFunction) {
     const { username, priority } = req.body;
     if(priority !== "") {
+        logger.info(`Priority is set for user: ${username}`);
         next();
-    }
-    logger.info(`Checking cache for user: ${username}`);
-    const user = await redis.get(username);
-    if (user) {
-        logger.info(`Cache hit for user: ${username}`);
-        res.json(user);
     } else {
-        next();
-    }   
+        logger.info(`Checking cache for user: ${username}`);
+        const user = await redis.get(username);
+        if (user) {
+            logger.info(`Cache hit for user: ${username}`);
+            res.json(user);
+        } 
+    }
+     
 }

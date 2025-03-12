@@ -10,6 +10,7 @@ export async function processMessages(req: Request, res: Response) {
         };
         const categorizedData = await categorizeLinkedInMessages(messages, priority, username);
         console.log(categorizedData);
+        console.log("Returning data");
         res.json(categorizedData);
 
     } catch (e) {

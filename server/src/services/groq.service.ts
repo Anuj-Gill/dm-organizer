@@ -36,21 +36,37 @@ const createSystemPrompt = (messages: Message[], priorityPrompt: string): string
 
 ${priorityPrompt ? `**Priority Definition:** ${priorityPrompt}\n` : ''}
 
-Please analyze each message and assign ONLY from these five specific categories:
+Please analyze each message and assign ONLY from these five specific category names:
 
-1. Priority - ${priorityPrompt || "Job offers, internships, urgent professional matters"}
-2. Spam - Unwanted promotions, mass outreach, irrelevant content
-3. Networking - Connection requests, introductions, casual professional conversations
-4. Sales & Outreach - Cold outreach selling services, products, business pitches
-5. Needs Response - Messages requiring a reply or follow-up
+VALID CATEGORIES (USE EXACTLY AS WRITTEN):
+- "Priority"
+- "Spam"
+- "Networking"
+- "Sales & Outreach"
+- "Needs Response"
 
-VERY IMPORTANT INSTRUCTIONS:
-- Only use the exact category names listed above: "Priority", "Spam", "Networking", "Sales & Outreach", or "Needs Response"
-- Do not create or invent any new categories or tags
-- Do not use variations or alternatives to these category names
+Category definitions:
+1. Priority: ${priorityPrompt || "Job offers, internships, urgent professional matters"}
+2. Spam: Unwanted promotions, mass outreach, irrelevant content
+3. Networking: Connection requests, introductions, casual professional conversations
+4. Sales & Outreach: Cold outreach selling services, products, business pitches
+5. Needs Response: Messages requiring a reply or follow-up
+
+CRITICAL INSTRUCTIONS:
+- Use ONLY the exact category names listed above - do not modify or combine them with descriptions
+- INCORRECT: "Priority - networking", "Priority/Urgent", "Spam message"
+- CORRECT: "Priority", "Spam", "Networking", etc.
+- Do not create new categories or variations
 - Assign at least one category to each message
 - A message can have multiple categories if appropriate (e.g., both "Priority" and "Needs Response")
 - Return only valid JSON with this structure: {"tags": [{"messageId": "id", "tags": ["Category1", "Category2"]}, ...]}
+
+Example of CORRECT response format:
+{"tags": [
+  {"messageId": "123", "tags": ["Priority", "Needs Response"]},
+  {"messageId": "456", "tags": ["Spam"]},
+  {"messageId": "789", "tags": ["Networking", "Sales & Outreach"]}
+]}
 
 Messages to categorize:
 ${JSON.stringify({ messages }, null, 2)}`;
@@ -187,13 +203,12 @@ const processBatch = async (messageBatch: Message[], priorityPrompt: string): Pr
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${API_KEY}`,
+          Authorization: `Bearer ${API_KEY}`, 
         },
       }
     );
 
     const responseContent = response.data.choices[0]?.message?.content;
-
     if (!responseContent) {
       console.warn("Empty response from API for batch");
       return [];
