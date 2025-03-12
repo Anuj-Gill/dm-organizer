@@ -1,6 +1,5 @@
 // Execute code when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
-  // ... (Rest of your initialization code, as before) ...
   // Get references to UI elements
 const elements = {
     linkedinUsernameInput: document.getElementById('linkedinUsername'),
