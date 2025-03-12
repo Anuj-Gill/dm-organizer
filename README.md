@@ -109,4 +109,4 @@ MIT
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](github.com/your-repo/issues).
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/Anuj-Gill/dm-organizer/issues).
