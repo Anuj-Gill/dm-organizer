@@ -19,6 +19,8 @@ export async function checkCache(req: Request, res: Response, next: NextFunction
         if (user) {
             logger.info(`Cache hit for user: ${username}`);
             res.json(user);
+        } else {
+            next();
         } 
     }
      
