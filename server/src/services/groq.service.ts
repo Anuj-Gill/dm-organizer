@@ -47,10 +47,10 @@ VALID CATEGORIES (USE EXACTLY AS WRITTEN):
 
 Category definitions:
 1. Priority: ${priorityPrompt || "Job offers, internships, urgent professional matters"}
-2. Spam: Unwanted promotions, mass outreach, irrelevant content
-3. Networking: Connection requests, introductions, casual professional conversations
-4. Sales & Outreach: Cold outreach selling services, products, business pitches
-5. Needs Response: Messages requiring a reply or follow-up
+2. Spam: Unwanted promotions, mass outreach, irrelevant content.
+3. Needs Response: Messages requiring a reply or follow-up, including genuine inquiries with resumes, project links, or detailed information.
+4. Sales & Outreach: Cold outreach selling services, products, business pitches, Linkedin offers etc.
+5. Networking: Connection requests, introductions, casual conversations.
 
 CRITICAL INSTRUCTIONS:
 - Use ONLY the exact category names listed above - do not modify or combine them with descriptions
