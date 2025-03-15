@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:20-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -10,6 +10,8 @@ RUN npm install
 
 # Bundle app source
 COPY . .
+
+RUN npx prisma generate
 
 RUN npx tsc -b
 
