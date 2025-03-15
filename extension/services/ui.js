@@ -2,6 +2,7 @@ export function initializeUI(elements) {
     // Load saved user info from localStorage if available
     const savedLinkedinUsername = localStorage.getItem('linkedinUsername');
     const savedUserName = localStorage.getItem('userName');
+    const savedApiKey = localStorage.getItem('apiKey');
     
     if (savedLinkedinUsername) {
       elements.linkedinUsernameInput.value = savedLinkedinUsername;
@@ -10,9 +11,15 @@ export function initializeUI(elements) {
     if (savedUserName) {
       elements.userNameInput.value = savedUserName;
     }
+
+    if (savedApiKey) {
+      elements.groqApiKey.value = savedApiKey;
+    }
+
+  
     
     // If both values exist, show greeting and enable fetch button
-    if (savedLinkedinUsername && savedUserName) {
+    if (savedLinkedinUsername && savedUserName && savedApiKey) {
       elements.userGreeting.textContent = `Hello, ${savedUserName}!`;
       elements.userGreeting.style.display = 'block';
       elements.fetchButton.disabled = false;

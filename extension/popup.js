@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     filterContainer: document.getElementById("filterOptions"),
     filteredMessages: document.getElementById("filteredMessages"),
     priorityInupt: document.getElementById("priorityInput"),
+    groqApiKey: document.getElementById("groqApiKey"),
   };
   
   let processedMessages = [];
@@ -43,13 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function handleSaveUserInfo() {
     const linkedinUsername = elements.linkedinUsernameInput.value.trim();
     const userName = elements.userNameInput.value.trim();
+    const apiKey = elements.groqApiKey.value.trim();
     
-    if (!linkedinUsername || !userName) {
-      showError('Please enter both LinkedIn username and your name.', elements);
+    if (!linkedinUsername || !userName || !apiKey) {
+      showError('Please enter LinkedIn username your name and your Groq API Key.', elements);
       return;
     }
     
-    saveUserInfo(linkedinUsername, userName);
+    saveUserInfo(linkedinUsername, userName, apiKey);
     
     elements.userGreeting.textContent = `Hello, ${userName}!`;
     elements.userGreeting.style.display = 'block';

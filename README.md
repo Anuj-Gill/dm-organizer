@@ -36,6 +36,8 @@ LinkedIn DM Organizer solves the problem of managing high volumes of LinkedIn me
 - Redis instance(Configured for Upstash redis instance)
 - Groq API key
 
+Note: If you are not interested in contributing to this project and just want to try out the extension, skip to the Extension Setup section.
+
 ### Server Setup
 1. Navigate to the server directory
    ```bash
@@ -78,6 +80,7 @@ LinkedIn DM Organizer solves the problem of managing high volumes of LinkedIn me
 - Only sender names and last message content are processed
 - No message content is stored in databases
 - Only message IDs and assigned tags are cached (10-minute TTL)
+- Users can provide their own AI Groq API key
 
 ## 🧰 Technical Details
 

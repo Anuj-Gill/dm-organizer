@@ -162,6 +162,7 @@
 
         #fetchMessages {
             margin-bottom: 20px;
+            
         }
 
         #loader {
@@ -399,14 +400,21 @@
                 <label for="userName">Your Name:</label>
                 <input type="text" id="userName" placeholder="Enter your name">
             </div>
+
+            <div class="input-group">
+                <label for="groqApiKey">Your Groq API Key:</label>
+                <input type="text" id="groqApiKey" placeholder="Enter your Groq API key">
+            </div>
             <button id="saveUserInfo">Save User Info</button>
         </div>
         
-        <div id="userGreeting">Hello, Anuj Gill!</div>
+        <div id="userGreeting"></div>
+
+        
 
         <input type="text" id="priorityInput" placeholder="Enter Your Priority!">
 
-        <button id="fetchMessages">Process Your LinkedIn Messages</button>
+        <button id="fetchMessages" disabled>Process Your LinkedIn Messages</button>
         
         <div id="loader">
             <div class="spinner"></div>
