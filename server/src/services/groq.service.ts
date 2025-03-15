@@ -24,12 +24,7 @@ interface CategoryResponse {
 
 const API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "llama-3.3-70b-versatile"; 
-const API_KEY = miscConfig.groqApiKey;
 const BATCH_SIZE = 10; // Number of messages to process in each batch
-
-if (!API_KEY) {
-  throw new Error("API key is missing in config. Please provide a valid Groq API key.");
-}
 
 const createSystemPrompt = (messages: Message[], priorityPrompt: string): string => { 
   return `You are an AI assistant that categorizes LinkedIn direct messages by priority and intent.
@@ -188,7 +183,7 @@ const parseApiResponse = (responseContent: string): CategoryResponse => {
 };
 
 // Process a single batch of messages
-const processBatch = async (messageBatch: Message[], priorityPrompt: string): Promise<CategorizedMessage[]> => {
+const processBatch = async (messageBatch: Message[], priorityPrompt: string, apiKey: string): Promise<{data: CategorizedMessage[], error?: {status: number, message: string}}> => {
   try {
     const systemPrompt = createSystemPrompt(messageBatch, priorityPrompt);
 
@@ -203,7 +198,7 @@ const processBatch = async (messageBatch: Message[], priorityPrompt: string): Pr
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${API_KEY}`, 
+          Authorization: `Bearer ${apiKey}`, 
         },
       }
     );
@@ -211,33 +206,83 @@ const processBatch = async (messageBatch: Message[], priorityPrompt: string): Pr
     const responseContent = response.data.choices[0]?.message?.content;
     if (!responseContent) {
       console.warn("Empty response from API for batch");
-      return [];
+      return {
+        data: [],
+        error: {
+          status: 422,
+          message: "Empty response from Groq API"
+        }
+      };
     }
 
     const parsedResponse = parseApiResponse(responseContent);
-    return parsedResponse.tags;
+    return { data: parsedResponse.tags };
   } catch (error: any) {
     console.error(`Error processing batch: ${error.message}`);
-    return [];
+    if (error.response) {
+      if (error.response.status === 401) {
+        return {
+          data: [],
+          error: {
+            status: 401,
+            message: "Authentication failed. Please check your API key."
+          }
+        };
+      }
+      
+      if (error.response.status === 404) {
+        return {
+          data: [],
+          error: {
+            status: 404,
+            message: "API endpoint not found. Please verify the API URL."
+          }
+        };
+      }
+    }
+    
+    return {
+      data: [],
+      error: { 
+        status: error.response?.status || 500, 
+        message: error.response?.data?.error?.message || error.message 
+      }
+    };
   }
 };
 
 // Main function with batching implementation
-const categorizeLinkedInMessages = async (messages: Message[], priorityPrompt: string, username: string): Promise<CategoryResponse> => {
+const categorizeLinkedInMessages = async (
+  messages: Message[], 
+  priorityPrompt: string, 
+  username: string, 
+  apiKey: string
+): Promise<{tags?: CategorizedMessage[], error?: {status: number, message: string}}> => {
   try {
     // Process messages in batches
     const allResults: CategorizedMessage[] = [];
+    let batchError = null;
     
     // Split messages into batches of BATCH_SIZE
     for (let i = 0; i < messages.length; i += BATCH_SIZE) {
       const messageBatch = messages.slice(i, i + BATCH_SIZE);
       logger.info(`Processing batch ${Math.floor(i/BATCH_SIZE) + 1} of ${Math.ceil(messages.length/BATCH_SIZE)} for user: ${username}`);
       
-      const batchResults = await processBatch(messageBatch, priorityPrompt);
-      allResults.push(...batchResults);
+      const result = await processBatch(messageBatch, priorityPrompt, apiKey);
+      
+      if (result.error) {
+        batchError = result.error;
+        break;
+      }
+      
+      allResults.push(...result.data);
     }
 
-    const finalResponse: CategoryResponse = { tags: allResults };
+    if (batchError) {
+      return { error: batchError };
+    }
+
+    const finalResponse = { tags: allResults };
     
     // Cache the results
     logger.info(`Categorized ${allResults.length} messages for user: ${username}`);
@@ -251,21 +296,29 @@ const categorizeLinkedInMessages = async (messages: Message[], priorityPrompt: s
         data: error.response.data
       });
       
-      if (error.response.status === 401) {
-        throw new Error("Authentication failed. Please check your API key.");
-      }
       
-      if (error.response.status === 404) {
-        throw new Error("API endpoint not found. Please verify the API URL.");
-      }
+      return {
+        error: {
+          status: error.response.status,
+          message: error.response.data?.error?.message || "API error occurred"
+        }
+      };
     } else if (error.request) {
       console.error("Network Error - No response received");
-      throw new Error("Network error. Please check your internet connection.");
-    } else {
-      console.error("Request Error:", error.message);
+      return {
+        error: {
+          status: 503,
+          message: "Network error. Please check your internet connection."
+        }
+      };
     }
     
-    throw new Error(`Failed to categorize messages: ${error.message}`);
+    return {
+      error: {
+        status: 500,
+        message: error.message || "Unknown error occurred"
+      }
+    };
   }
 };
 

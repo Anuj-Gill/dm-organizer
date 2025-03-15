@@ -4,15 +4,22 @@ import { categorizeLinkedInMessages } from "../../services/groq.service";
 
 export async function processMessages(req: Request, res: Response) {
     try{ 
-        const {username, messages, priority} = req.body;
+        const {username, messages, priority, apiKey} = req.body;
         if (!messages || !Array.isArray(messages)) {
             res.status(400).json({ error: "Invalid request format. 'messages' must be an array." });
-        };
-        const categorizedData = await categorizeLinkedInMessages(messages, priority, username);
-        console.log(categorizedData);
-        console.log("Returning data");
-        res.json(categorizedData);
-
+        }
+        
+        const result = await categorizeLinkedInMessages(messages, priority, username, apiKey);
+        
+        if (result.error) {
+            logger.error(`API Error: ${result.error.status} - ${result.error.message}`);
+            res.status(result.error.status).json({ error: result.error.message });
+        } else {
+            logger.info(`Returning data ${result}`);
+            res.json(result);
+        }
+        
+        
     } catch (e) {
         logger.error(`Error processing messages: ${e}`);
         res.status(500).json({ error: "Internal Server Error" });

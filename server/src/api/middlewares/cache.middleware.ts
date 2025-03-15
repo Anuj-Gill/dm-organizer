@@ -15,8 +15,8 @@ export async function checkCache(req: Request, res: Response, next: NextFunction
         next();
     } else {
         logger.info(`Checking cache for user: ${username}`);
-        const user = await redis.get(username);
-        if (user) {
+        const user: any = await redis.get(username);
+        if (user.tags.length > 0) {
             logger.info(`Cache hit for user: ${username}`);
             res.json(user);
         } else {
