@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function fetchLinkedInMessages() {
-    console.log("Starting message fetch process...");
       
     elements.filteredMessages.innerHTML = "";
     elements.error.style.display = "none";

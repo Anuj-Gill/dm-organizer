@@ -16,11 +16,13 @@ export function scrapeLinkedInMessagesByName() {
           const preview = previewElement ? previewElement.innerText.trim() : "No preview available";
           //Sanitize the name to use in Json
           const sanitizedName = name.replace(/,/g, '');
-  
-          conversations.push({
-            name: sanitizedName,
-            content: preview,
-          });
+          if(preview.slice(0,4) !== "You:") {
+            conversations.push({
+              name: sanitizedName,
+              content: preview,
+            });
+          }
+          
         }
       });
   

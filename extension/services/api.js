@@ -30,7 +30,6 @@ export async function sendToAPI(formattedMessages, originalMessages, elements, o
     console.log("API Response data:", data);
     onSuccess(data, originalMessages);
   } catch (err) {
-    console.error("API Error:", err);
     onError(err.message || "Unable to reach API. Please try again later.");
   }
 }

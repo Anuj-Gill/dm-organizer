@@ -27,6 +27,7 @@ export function initializeUI(elements) {
   }
   
   export function displayFilterOptions(tagCounts, elements, activeFilter, onFilterClick) {
+    console.log(tagCounts);
     elements.filterContainer.innerHTML = "";
     const filters = [
       { 
@@ -63,7 +64,6 @@ export function initializeUI(elements) {
         id: 'all', 
         name: 'All Messages', 
         icon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>', 
-        count: tagCounts["Spam"] + tagCounts["Priority"] + tagCounts["Networking"] + tagCounts["Sales & Outreach"] + tagCounts["Needs Response"]
       }
     ];
     
@@ -74,7 +74,7 @@ export function initializeUI(elements) {
       button.innerHTML = `
         <span class="filter-icon" style="padding-bottom: 16px;">${filter.icon}</span>
         <span class="filter-name">${filter.name}</span>
-        <span class="filter-count">${filter.count}</span>
+        ${filter.name !== 'All Messages' ? `<span class="filter-count">${filter.count}</span>` : ''}
       `;
       
       // Add active class if this is the active filter
@@ -125,10 +125,21 @@ export function initializeUI(elements) {
       const messageItem = document.createElement('div');
       messageItem.className = 'message-item';
   
-      // Create tag pills
-      const tagPills = msg.tags.map(tag =>
-        `<span class="tag-pill ${tag.toLowerCase().replace(/\s+/g, '-')}">${tag}</span>`
-      ).join('');
+      const tagColors = {
+        'Priority': '#ff7700',
+        'Spam': '#ff4d4d',
+        'Networking': '#0a66c2',
+        'Sales & Outreach': '#8e44ad', // Purple color for Sales & Outreach
+        'Needs Response': '#27ae60'
+      };
+  
+      // Create tag pills with specific background colors
+      const tagPills = msg.tags.map(tag => {
+        const tagClass = tag.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        const bgColor = tagColors[tag] || '#e0e0e0'; // Default gray if tag not in mapping
+        return `<span class="tag-pill ${tagClass}" style="background-color: ${bgColor}; color: white;">${tag}</span>`;
+      }).join('');
+
   
       messageItem.innerHTML = `
         <div class="message-header">
@@ -137,6 +148,8 @@ export function initializeUI(elements) {
         </div>
         <div class="message-preview">${msg.preview}</div>
       `;
+
+      console.log(messageItem);
   
       // Add click handler
       messageItem.addEventListener('click', () => onMessageClick(msg));
