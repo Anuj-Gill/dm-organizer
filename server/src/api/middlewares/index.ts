@@ -7,11 +7,11 @@ var cookieParser = require("cookie-parser");
 
 export default function (app: Application) {
   app.use(cors({
-    origin: ["chrome-extension://gecmgbcingenofgkdcmceooknpefflfd", "http://localhost:3000", "*"],
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true
-  }));  
+    allowedHeaders: ["Content-Type", "Authorization"]
+  }));
+  
   app.use(cookieParser());
   app.use(express.urlencoded({ extended: true }));
   app.use(metricsMiddleware);
