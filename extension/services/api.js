@@ -1,4 +1,4 @@
-const API_ENDPOINT = "http://localhost:3000/api/message/process";
+const API_ENDPOINT = "https://dm-organizer.onrender.com/api/message/process";
 
 export async function sendToAPI(formattedMessages, originalMessages, elements, onSuccess, onError) {
   console.log("Sending data to API:", JSON.stringify({ messages: formattedMessages }));
