@@ -4,12 +4,12 @@ import { categorizeLinkedInMessages } from "../../services/groq.service";
 
 export async function processMessages(req: Request, res: Response) {
     try{ 
-        const {username, messages, priority, apiKey} = req.body;
+        const {username, messages, priority, apiConfig} = req.body;
         if (!messages || !Array.isArray(messages)) {
             res.status(400).json({ error: "Invalid request format. 'messages' must be an array." });
         }
         
-        const result = await categorizeLinkedInMessages(messages, priority, username, apiKey);
+        const result = await categorizeLinkedInMessages(messages, priority, username, apiConfig);
         
         if (result.error) {
             logger.error(`API Error: ${result.error.status} - ${result.error.message}`);

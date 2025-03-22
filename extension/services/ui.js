@@ -1,30 +1,48 @@
 export function initializeUI(elements) {
-    // Load saved user info from localStorage if available
-    const savedLinkedinUsername = localStorage.getItem('linkedinUsername');
-    const savedUserName = localStorage.getItem('userName');
-    const savedApiKey = localStorage.getItem('apiKey');
-    
-    if (savedLinkedinUsername) {
-      elements.linkedinUsernameInput.value = savedLinkedinUsername;
-    }
-    
-    if (savedUserName) {
-      elements.userNameInput.value = savedUserName;
-    }
+  const savedLinkedinUsername = localStorage.getItem('linkedinUsername');
+  const savedUserName = localStorage.getItem('userName');
+  const savedApiKey = localStorage.getItem('apiKey');
+  const savedModel = localStorage.getItem('model');
+  const savedApiProvider = localStorage.getItem('apiProvider');
 
-    if (savedApiKey) {
-      elements.groqApiKey.value = savedApiKey;
-    }
-
-  
-    
-    // If both values exist, show greeting and enable fetch button
-    if (savedLinkedinUsername && savedUserName && savedApiKey) {
-      elements.userGreeting.textContent = `Hello, ${savedUserName}!`;
-      elements.userGreeting.style.display = 'block';
-      elements.fetchButton.disabled = false;
-    }
+  if (savedLinkedinUsername) {
+    elements.linkedinUsernameInput.value = savedLinkedinUsername;
   }
+
+  if (savedUserName) {
+    elements.userNameInput.value = savedUserName;
+  }
+
+  if (savedApiKey) {
+    elements.apiKeyInput.value = savedApiKey;
+  }
+
+  if (savedApiProvider) {
+    elements.apiProviderSelect.value = savedApiProvider;
+     // Ensure model dropdown is updated
+    if (savedModel) {
+      elements.modelSelect.value = savedModel;
+    }
+  } 
+
+  if (savedLinkedinUsername && savedUserName && savedApiKey) {
+    elements.userGreeting.textContent = `Hello, ${savedUserName}!`;
+    elements.userGreeting.style.display = 'block';
+    elements.fetchButton.disabled = false;
+    elements.userInfoSection.style.display = 'none'; // Hide userInfo section
+    elements.editUserInfo.style.display = 'block'; // Show edit button
+  } else {
+    elements.userInfoSection.style.display = 'block';
+    elements.editUserInfo.style.display = 'none';
+  }
+}
+
+export function setupEditButton(elements) {
+  elements.editUserInfo.addEventListener('click', () => {
+    elements.userInfoSection.style.display = 'block';
+    elements.editUserInfo.style.display = 'none';
+  });
+}
   
   export function displayFilterOptions(tagCounts, elements, activeFilter, onFilterClick) {
     console.log(tagCounts);

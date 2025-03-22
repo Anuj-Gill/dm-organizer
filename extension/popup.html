@@ -3,392 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkedIn Message Manager</title>
-    <style>
-        :root {
-            --linkedin-blue: #0a66c2;
-            --linkedin-light-blue: #e7f3ff;
-            --text-primary: #191919;
-            --text-secondary: #666666;
-            --bg-primary: #ffffff;
-            --bg-secondary: #f3f6f8;
-            --border-color: #e0e0e0;
-            --success-color: #057642;
-            --error-color: #b74700;
-            --tag-high-priority: #b74700;
-            --tag-spam: #666666;
-            --tag-networking: #0a66c2;
-            --tag-sales: #5c6bc0;
-            --tag-needs-response: #057642;
-            --filter-inactive: #f3f6f8;
-            --filter-active: #e7f3ff;
-            --priority-bg: #0a66c2;
-            --priority-icon: #ff7a00;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            width: 380px;
-            margin: 0;
-            padding: 0;
-            color: var(--text-primary);
-            background-color: var(--bg-primary);
-        }
-
-        .container {
-            padding: 16px;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 12px;
-            padding-top: 8px;
-        }
-
-        .logo {
-            width: 24px;
-            height: 24px;
-            margin-right: 12px;
-            color: var(--linkedin-blue);
-        }
-
-        h1 {
-            font-size: 18px;
-            margin: 0;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        h2 {
-            font-size: 16px;
-            margin: 0 0 20px 0;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-align: center;
-        }
-
-        #userInfoSection {
-            background-color: var(--bg-secondary);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .input-group {
-            margin-bottom: 16px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 14px;
-            color: var(--text-primary);
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 10px 12px;
-            box-sizing: border-box;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.2s;
-        }
-
-        .input-group input:focus {
-            border-color: var(--linkedin-blue);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(10, 102, 194, 0.2);
-        }
-
-        input[type="text"]::placeholder {
-            color: #a0a0a0;
-        }
-
-        #priorityInput {
-            width: 100%;
-            padding: 10px 12px;
-            margin-bottom: 16px;
-            box-sizing: border-box;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.2s;
-        }
-
-        #priorityInput:focus {
-            border-color: var(--linkedin-blue);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(10, 102, 194, 0.2);
-        }
-
-        #userGreeting {
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 16px;
-            color: var(--linkedin-blue);
-            text-align: center;
-        }
-
-        button {
-            background-color: var(--linkedin-blue);
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: background-color 0.2s;
-            width: 100%;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-
-        button:hover {
-            background-color: #004182;
-        }
-
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        #fetchMessages {
-            margin-bottom: 20px;
-            
-        }
-
-        #loader {
-            display: none;
-            margin: 24px 0;
-            text-align: center;
-        }
-
-        .spinner {
-            border: 3px solid rgba(10, 102, 194, 0.1);
-            border-top: 3px solid var(--linkedin-blue);
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .notification {
-            padding: 12px;
-            margin: 16px 0;
-            border-radius: 6px;
-            font-size: 14px;
-            text-align: center;
-            display: none;
-        }
-
-        #error {
-            background-color: rgba(183, 71, 0, 0.1);
-            color: var(--error-color);
-        }
-
-        #success {
-            background-color: rgba(5, 118, 66, 0.1);
-            color: var(--success-color);
-        }
-
-        #messageContainer {
-            margin-top: 24px;
-        }
-
-        #filterOptions {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .filter-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--filter-inactive);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 0px 0px;
-            height: 90px;
-            transition: all 0.2s;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .filter-btn.active {
-            background-color: var(--priority-bg);
-            border-color: var(--linkedin-blue);
-            color: white;
-        }
-
-        .filter-btn.active .filter-name {
-            color: white;
-        }
-
-        .filter-icon {
-            font-size: 20px;
-            margin-bottom: -8px;
-            line-height: 1;
-        }
-
-        .filter-name {
-            font-size: 13px;
-            text-align: center;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-        }
-
-        .filter-count {
-            background-color: var(--linkedin-blue);
-            color: white;
-            border-radius: 16px;
-            padding: 3px 10px;
-            font-size: 12px;
-            min-width: 14px;
-            text-align: center;
-            position: absolute;
-            bottom: -8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        .filter-btn.active .filter-count {
-            background-color: white;
-            color: var(--linkedin-blue);
-        }
-
-        /* Custom icon positioning for "Priority" */
-        .filter-btn[data-filter="priority"] .filter-icon {
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--priority-icon);
-            border-radius: 50%;
-            padding: 2px;
-        }
-
-        #filteredMessages {
-            max-height: 350px;
-            overflow-y: auto;
-            padding-right: 4px;
-            margin-top: 12px;
-        }
-
-        .message-item {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: box-shadow 0.2s;
-            background-color: var(--bg-primary);
-        }
-
-        .message-item:hover {
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .message-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            align-items: flex-start;
-        }
-
-        .message-name {
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--text-primary);
-        }
-
-        .message-tags {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .tag-pill {
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 12px;
-            color: white;
-            font-weight: 500;
-        }
-
-        .tag-pill.high-priority {
-            background-color: var(--tag-high-priority);
-        }
-
-        .tag-pill.spam {
-            background-color: var(--tag-spam);
-        }
-
-        .tag-pill.networking {
-            background-color: var(--tag-networking);
-        }
-
-        .tag-pill.sales-&-outreach {
-            background-color: var(--tag-sales);
-        }
-
-        .tag-pill.needs-response {
-            background-color: var(--tag-needs-response);
-        }
-
-        .message-preview {
-            font-size: 13px;
-            color: var(--text-secondary);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            line-height: 1.5;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 24px;
-            color: var(--text-secondary);
-            font-style: italic;
-            background-color: var(--bg-secondary);
-            border-radius: 8px;
-        }
-
-        .version {
-            font-size: 11px;
-            color: var(--text-secondary);
-            text-align: center;
-            margin-top: 20px;
-        }
-    </style>
+    <title>LinkedIn DM Manager</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"></path>
-            </svg>
-            <h1>LinkedIn Message Manager</h1>
+            <div class="header-left">
+                <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"></path>
+                </svg>
+                <h1>LinkedIn DM Manager</h1>
+            </div>
+            <div class="header-right">
+                <a href="https://github.com/Anuj-Gill/dm-organizer" class="github-container" target="_blank" rel="noopener noreferrer">
+                    <img src="https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" alt="GitHub" class="github-logo">
+                    <span class="star-icon">★</span>
+                    <span id="githubStars">...</span> </a>
+                <a href="https://buymeacoffee.com/gillanuj12e" class="coffee-btn" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/coffee-cup.png" alt="Coffee" class="coffee-icon">
+                </a>
+            </div>
         </div>
         
         <div id="userInfoSection">
@@ -402,13 +37,28 @@
             </div>
 
             <div class="input-group">
-                <label for="groqApiKey">Your Groq API Key:</label>
-                <input type="text" id="groqApiKey" placeholder="Enter your Groq API key">
+              <label for="apiProvider">API Provider:</label>
+              <select id="apiProvider">
+                <option value="groq">Groq</option>
+                <option value="gemini">Gemini</option>
+              </select>
             </div>
+
+            <div class="input-group">
+              <label for="modelSelect">Model:</label>
+              <select id="modelSelect"></select>
+            </div>
+
+            <div class="input-group">
+                <label for="apiKey">Your API Key:</label>
+                <input type="text" id="apiKey" placeholder="Enter your API key">
+            </div>
+
             <button id="saveUserInfo">Save User Info</button>
         </div>
         
         <div id="userGreeting"></div>
+        <button id="editUserInfo">Edit User Info</button>
 
         
 
@@ -434,5 +84,6 @@
     </div>
     
     <script type="module" src="popup.js"></script>
+    <script type="module" src="api-selection.js"></script>
 </body>
 </html>

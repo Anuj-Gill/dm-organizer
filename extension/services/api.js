@@ -1,4 +1,4 @@
-const API_ENDPOINT = "https://dm-organizer.onrender.com/api/message/process";
+const API_ENDPOINT = "http://localhost:3000/api/message/process";
 
 export async function sendToAPI(formattedMessages, originalMessages, elements, onSuccess, onError) {
   console.log("Sending data to API:", JSON.stringify({ messages: formattedMessages }));
@@ -13,7 +13,7 @@ export async function sendToAPI(formattedMessages, originalMessages, elements, o
         messages: formattedMessages, 
         username: elements.linkedinUsernameInput.value, 
         priority: elements.priorityInupt.value,
-        apiKey: elements.groqApiKey.value
+        apiConfig: {model: elements.modelSelect.value, apiKey: elements.apiKeyInput.value, provider: elements.apiProviderSelect.value}
       }),
       signal: AbortSignal.timeout(10000)
     });
