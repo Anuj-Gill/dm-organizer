@@ -12,7 +12,7 @@ LinkedIn DM Organizer solves the problem of managing high volumes of LinkedIn me
 - **Custom Priority Filters**: Define what matters most to you
 - **Privacy-First Design**: No message content is stored in any database
 - **Fast Processing**: Redis caching for quick results
-- **Efficient AI Analysis**: Uses batched requests to Groq API (llama-3.3-70b-versatile)
+- **Efficient AI Analysis**: Uses batched requests.
 
 ## 🏗️ Architecture
 
@@ -25,7 +25,7 @@ LinkedIn DM Organizer solves the problem of managing high volumes of LinkedIn me
 ### Server (Backend)
 - Express.js + TypeScript
 - Redis for caching results (10-minute TTL)
-- Groq API integration with llama-3.3-70b-versatile model
+- Groq/Gemini API integration with your custom model
 - Winston for structured logging
 - Docker support for easy deployment
 

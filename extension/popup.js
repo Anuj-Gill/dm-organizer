@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function fetchGitHubStars() {
     const githubStarsElement = document.getElementById('githubStars');
     try {
-      const response = await fetch('https://api.github.com/repos/Anuj-Gill/JobScrape');
+      const response = await fetch('https://api.github.com/repos/Anuj-Gill/dm-organizer');
       const data = await response.json();
       githubStarsElement.textContent = data.stargazers_count;
     } catch (error) {
@@ -169,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    console.log("Messages to be sent to API:", result);
     sendToAPI(
       result,
       result,
@@ -464,7 +463,6 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       } else {
-        console.log('Not on LinkedIn, opening LinkedIn messaging page');
         // Store the target name in session storage to use after navigation
         sessionStorage.setItem('pendingChatTarget', message.name);
         chrome.tabs.create({ url: 'https://www.linkedin.com/messaging/' }, (tab) => {
@@ -473,7 +471,6 @@ document.addEventListener('DOMContentLoaded', () => {
             chrome.scripting.executeScript({
               target: { tabId: tab.id },
               func: (targetName) => {
-                console.log(`[LinkedIn Chat Opener] Page loaded, attempting to find chat with ${targetName}`);
                 if (window.openChatByName) {
                   window.openChatByName(targetName);
                 }
@@ -505,7 +502,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       break;
 
     case "navigateToMessaging":
-      console.log("Navigating to LinkedIn messaging page");
       chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
         if (tabs[0]) {
           // Store the target name in session storage to use after navigation
@@ -513,20 +509,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
           // Navigate to messaging page
           chrome.tabs.update(tabs[0].id, { url: 'https://www.linkedin.com/messaging/' }, () => {
-            console.log("Navigation initiated");
 
             // Set a timeout to retry finding the chat after navigation
             setTimeout(() => {
               chrome.scripting.executeScript({
                 target: { tabId: tabs[0].id },
                 func: (targetName) => {
-                  console.log(`[LinkedIn Chat Opener] Attempting to find chat with ${targetName} after navigation`);
 
                   // Get the openChatByName function from the page
                   if (window.openChatByName) {
                     window.openChatByName(targetName);
                   } else {
-                    console.log("[LinkedIn Chat Opener] openChatByName function not found on page");
                   }
                 },
                 args: [message.targetName]

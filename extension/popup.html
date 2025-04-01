@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkedIn DM Manager</title>
+    <title>Sort It Out</title>
+    <link rel="icon" href="assets/logo.jpeg" type="image/jpeg">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="header-left">
-                <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"></path>
-                </svg>
-                <h1>LinkedIn DM Manager</h1>
+                <img src="assets/logo.png" alt="logo" class="logo-icon">
+                <h1>Sort It Out</h1>
             </div>
             <div class="header-right">
                 <a href="https://github.com/Anuj-Gill/dm-organizer" class="github-container" target="_blank" rel="noopener noreferrer">
@@ -62,7 +61,7 @@
 
         
 
-        <input type="text" id="priorityInput" placeholder="Enter Your Priority!">
+        <input type="text" id="priorityInput" placeholder="Priority (e.g., Networking messages are my priority)">
 
         <button id="fetchMessages" disabled>Process Your LinkedIn Messages</button>
         
@@ -80,7 +79,7 @@
             <div id="filteredMessages"></div>
         </div>
         
-        <div class="version">v1.0.0</div>
+        <div class="version">v1.1.0</div>
     </div>
     
     <script type="module" src="popup.js"></script>

@@ -1,3 +1,3 @@
 (() => {
-  console.log("LinkedIn Message Extractor loaded!");
+  console.log("Sort It Out extension successfully loaded!");
 })();
