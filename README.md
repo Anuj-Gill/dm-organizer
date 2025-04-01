@@ -1,110 +1,104 @@
-# LinkedIn DM Organizer
+# Sort It Out
 
 A browser extension that helps LinkedIn users prioritize and organize their direct messages using AI.
 
+## 🚀 Try It Now
+
+Want to declutter your LinkedIn inbox instantly? Install **Sort It Out** and get your messages automatically categorized!
+
+🔗 **[Chrome Extension Link](https://chromewebstore.google.com/detail/sort-it-out/bjnbbgnocjpecapgkioklbgghjgaleno)**
+
 ## 🔍 Overview
 
-LinkedIn DM Organizer solves the problem of managing high volumes of LinkedIn messages by automatically categorizing and prioritizing conversations. The extension analyzes message content and applies tags to help users focus on what matters most.
+Keeping track of important messages on LinkedIn is a hassle. **Sort It Out** solves this by **auto-organizing your DMs** so you can focus on what truly matters.
+
+🔹 Just install the extension, add your details and API key (Groq or Gemini), choose a model, and boom—your **conversations are neatly sorted into categories**.
+
+I’d love to keep adding more features, so I’ve **open-sourced it**! Feel free to contribute: [GitHub Repository](https://github.com/Anuj-Gill/dm-organizer).
 
 ## 🌟 Features
 
-- **Intelligent Categorization**: Automatically tags messages as Priority, Spam, Networking, Sales, or Needs Response
-- **Custom Priority Filters**: Define what matters most to you
-- **Privacy-First Design**: No message content is stored in any database
-- **Fast Processing**: Redis caching for quick results
-- **Efficient AI Analysis**: Uses batched requests.
+- **Smart Categorization** – Messages are tagged as Priority, Spam, Networking, Sales, or Needs Response
+- **Custom Priority Filters** – Define what matters most to you
+- **Privacy First** – No message content is stored
+- **Fast Processing** – Uses Redis caching for quick results
+- **Choose Your AI** – Supports both **Groq** and **Gemini** models
 
-## 🏗️ Architecture
+## 🏗️ How It Works
 
-### Extension (Frontend)
-- Vanilla JavaScript browser extension
-- Extracts message data from LinkedIn DOM
-- Simple, intuitive UI for message categorization
-- Minimal permissions required
+1. **Extracts messages** from LinkedIn’s DOM
+2. **Sends data to the backend** for AI analysis
+3. **Checks Redis cache** for recent results
+4. **Uses AI (Groq/Gemini) to categorize** messages
+5. **Displays sorted messages** in the extension UI
 
-### Server (Backend)
-- Express.js + TypeScript
-- Redis for caching results (10-minute TTL)
-- Groq/Gemini API integration with your custom model
-- Winston for structured logging
-- Docker support for easy deployment
+## 🔧 Setting Up Locally (For Contributors)
 
-## 🚀 Getting Started
+If you want to set up **Sort It Out** on your own machine and contribute, follow these steps:
 
 ### Prerequisites
 - Node.js 16+
-- Redis instance(Configured for Upstash redis instance)
-- Groq API key
-
-Note: If you are not interested in contributing to this project and just want to try out the extension, skip to the Extension Setup section.
+- A Redis instance (Configured for Upstash Redis)
+- Groq or Gemini API key
 
 ### Server Setup
-1. Navigate to the server directory
+
+1. Navigate to the server directory:
    ```bash
    cd server
    ```
 
-2. Install dependencies
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. Create a `.env` file with the following variables:
+3. Create a `.env` file and add your credentials:
    ```
    DATABASE_URL=
    PORT=3000
    FRONTEND_URL=chrome-extension://gecmgbcingenofgkdcmceooknpefflfd
-   GROQ_API_KEY=
+   API_KEY=your_groq_or_gemini_key
    UPSTASH_REDIS_REST_URL=
    UPSTASH_REDIS_REST_TOKEN=
-
    ```
 
-4. Start the server
+4. Start the server:
    ```bash
    npm run dev
    ```
 
 ### Extension Setup
-1. Navigate to the extension directory
+
+1. Navigate to the extension directory:
    ```bash
    cd extension
    ```
 
 2. Load the extension in your browser:
-   - Chrome: Go to `chrome://extensions/`, enable Developer mode, and click "Load unpacked"
-   - Firefox: Go to `about:debugging#/runtime/this-firefox`, click "Load Temporary Add-on", and select the `manifest.json` file
+   - **Chrome:** Go to `chrome://extensions/`, enable Developer mode, and click "Load unpacked"
+   - **Firefox:** Go to `about:debugging#/runtime/this-firefox`, click "Load Temporary Add-on", and select the `manifest.json` file
 
 ## 🔐 Privacy & Security
 
 - Only sender names and last message content are processed
 - No message content is stored in databases
 - Only message IDs and assigned tags are cached (10-minute TTL)
-- Users can provide their own AI Groq API key
+- Users can provide their own API key (Groq or Gemini)
 
-## 🧰 Technical Details
+## 🏷️ Message Categories
 
-### Message Processing Flow
-1. User inputs LinkedIn username and optional priority keywords
-2. Extension extracts message data from LinkedIn DOM
-3. Data is sent to backend API
-4. Backend checks Redis cache for recent results
-5. If not cached or custom priorities specified, messages are analyzed using Groq API
-6. Results are cached and returned to extension
-7. Extension displays categorized messages in UI
-
-### Tagging System
-Messages can receive multiple tags:
-1. **Priority** - Job offers, internships, urgent professional matters, or custom priorities
-2. **Spam** - Unwanted promotions, mass outreach, irrelevant content
-3. **Networking** - Connection requests, introductions, casual professional conversations
-4. **Sales & Outreach** - Cold outreach selling services, products, business pitches
-5. **Needs Response** - Messages requiring a reply or follow-up
+Messages are sorted into the following:
+1. **Priority** – Job offers, internships, urgent professional matters, or custom priorities
+2. **Spam** – Unwanted promotions, mass outreach, irrelevant content
+3. **Networking** – Connection requests, introductions, casual professional conversations
+4. **Sales & Outreach** – Cold outreach selling services, products, business pitches
+5. **Needs Response** – Messages requiring a reply or follow-up
 
 ## 🚧 Limitations & Future Improvements
 
-- Cannot directly open specific conversations due to LinkedIn's DOM structure
-- Currently relying on sender usernames for identification (potential for collisions)
+- Currently, it cannot directly open specific LinkedIn DMs due to LinkedIn's restrictions
+- Identification relies on sender usernames, which may cause occasional mismatches
 
 ## 📄 License
 
@@ -112,4 +106,5 @@ MIT
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/Anuj-Gill/dm-organizer/issues).
+I’d love to keep improving **Sort It Out**! If you have feature ideas or want to contribute, check out the [issues page](https://github.com/Anuj-Gill/dm-organizer/issues) and submit a PR!
+
